@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>مطعم لهيب | اطلب أونلاين</title>
+<meta name="description" content="قائمة مطعم لهيب — برغر، بيتزا، مشاوي وحلويات. اطلب في دقيقة وأرسل طلبك عبر واتساب.">
+<meta name="theme-color" content="#1c1917">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script>
+tailwind.config = { theme: { extend: {
+  colors: {
+    flame: { 50:'#fff7ed', 100:'#ffedd5', 200:'#fed7aa', 400:'#fb923c', 500:'#f97316', 600:'#ea580c', 700:'#c2410c' },
+    coal:  { 950:'#0c0a09', 900:'#1c1917', 800:'#292524', 700:'#44403c', 500:'#78716c', 300:'#d6d3d1', 200:'#e7e5e4', 100:'#f5f5f4', 50:'#fafaf9' }
+  },
+  fontFamily: { sans: ['Cairo', 'sans-serif'] }
+} } }
+</script>
+<style>
+  html { scroll-behavior: smooth; scroll-padding-top: 128px; }
+  body { -webkit-tap-highlight-color: transparent; }
+  .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { scrollbar-width: none; }
+  .fade-in { animation: fade .3s ease both; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .bump { animation: bump .45s ease; } @keyframes bump { 40% { transform: scale(1.12); } }
+  .sheet { transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+  .img-fallback { background: linear-gradient(135deg,#fed7aa,#fb923c); }
+  :focus-visible { outline: 3px solid #f97316; outline-offset: 2px; }
+  .pb-safe { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+</style>
+</head>
+<body class="bg-coal-50 text-coal-900 font-sans antialiased">
+
+<!-- ============ HERO ============ -->
+<header class="relative bg-coal-900 text-white overflow-hidden">
+  <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=70&w=1400" alt="" class="absolute inset-0 w-full h-full object-cover opacity-30" onerror="this.remove()">
+  <div class="absolute inset-0 bg-gradient-to-t from-coal-900 via-coal-900/70 to-coal-900/30"></div>
+  <div class="relative max-w-5xl mx-auto px-4 pt-6 pb-8">
+    <div class="flex items-center justify-between mb-10">
+      <div class="flex items-center gap-2.5">
+        <span class="w-11 h-11 rounded-2xl bg-flame-500 flex items-center justify-center shadow-lg shadow-flame-500/30"><i class="fa-solid fa-fire-flame-curved text-lg"></i></span>
+        <div class="leading-tight"><div class="font-extrabold text-lg">لهيب</div><div class="text-[11px] text-coal-300">مشاوي • برغر • بيتزا</div></div>
+      </div>
+      <a href="#info" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center" aria-label="معلومات المطعم"><i class="fa-solid fa-circle-info"></i></a>
+    </div>
+    <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-3">نكهة مشوية على <span class="text-flame-400">الفحم</span>،<br>تصلك ساخنة.</h1>
+    <p class="text-coal-300 mb-6 max-w-md">اختر وجبتك، وأرسل طلبك جاهزاً عبر واتساب في أقل من دقيقة.</p>
+    <div class="flex flex-wrap gap-2 text-sm">
+      <span id="openBadge" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur"></span>
+      <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur"><i class="fa-solid fa-motorcycle text-flame-400"></i>توصيل 30–40 د</span>
+      <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur"><i class="fa-solid fa-star text-amber-400"></i>4.8 <span class="text-coal-300">(1.2k)</span></span>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY BAR: mode + search + categories ============ -->
+<div id="stickyBar" class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-coal-200">
+  <div class="max-w-5xl mx-auto px-4 pt-3 pb-2">
+    <div class="flex gap-2 mb-2.5">
+      <div class="flex bg-coal-100 rounded-xl p-1 text-sm font-bold shrink-0" role="tablist" aria-label="طريقة الاستلام">
+        <button data-mode="delivery" class="px-3 py-1.5 rounded-lg"><i class="fa-solid fa-motorcycle ml-1.5"></i>توصيل</button>
+        <button data-mode="pickup" class="px-3 py-1.5 rounded-lg"><i class="fa-solid fa-bag-shopping ml-1.5"></i>استلام</button>
+      </div>
+      <div class="relative flex-1 min-w-0">
+        <i class="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-coal-500 text-sm"></i>
+        <input id="search" type="search" placeholder="ابحث في القائمة..." class="w-full bg-coal-100 rounded-xl pr-9 pl-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame-500">
+      </div>
+    </div>
+    <nav id="catNav" class="flex gap-2 overflow-x-auto no-scrollbar -mx-4 px-4" aria-label="أقسام القائمة"></nav>
+  </div>
+</div>
+
+<!-- ============ MENU ============ -->
+<main class="max-w-5xl mx-auto px-4 pb-32">
+  <!-- Chef's picks -->
+  <section id="picks" class="pt-6">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="text-lg font-extrabold"><i class="fa-solid fa-crown text-amber-500 ml-2"></i>اختيارات الشيف</h2>
+      <span class="text-xs text-coal-500">الأسعار بالدرهم</span>
+    </div>
+    <div id="picksRow" class="flex gap-3 overflow-x-auto no-scrollbar -mx-4 px-4 pb-2"></div>
+  </section>
+
+  <div id="menuSections"></div>
+  <div id="noResults" class="hidden text-center py-16 text-coal-500">
+    <i class="fa-solid fa-utensils text-4xl text-coal-300 mb-3 block"></i>لا توجد أطباق مطابقة لبحثك.
+  </div>
+
+  <!-- Info -->
+  <section id="info" class="mt-12 bg-white border border-coal-200 rounded-3xl p-6 grid sm:grid-cols-3 gap-6 text-sm">
+    <div><div class="text-coal-500 mb-1"><i class="fa-regular fa-clock ml-1.5"></i>أوقات العمل</div><div class="font-bold">يومياً: 12:00 ظهراً – 11:30 ليلاً</div></div>
+    <div><div class="text-coal-500 mb-1"><i class="fa-solid fa-location-dot ml-1.5"></i>العنوان</div><div class="font-bold">شارع المثال 12، وسط المدينة</div></div>
+    <div><div class="text-coal-500 mb-1"><i class="fa-solid fa-motorcycle ml-1.5"></i>التوصيل</div><div class="font-bold">الحد الأدنى <span id="minLabel"></span> • مجاني فوق <span id="freeLabel"></span></div></div>
+  </section>
+  <p class="text-center text-xs text-coal-500 mt-6">© 2026 مطعم لهيب — نسخة تجريبية للعرض</p>
+</main>
+
+<!-- ============ FLOATING CART BAR ============ -->
+<div id="cartBar" class="fixed bottom-0 inset-x-0 z-40 px-4 pb-safe pt-3 translate-y-full transition-transform duration-300 pointer-events-none">
+  <button id="cartBarBtn" class="pointer-events-auto max-w-5xl mx-auto w-full flex items-center gap-3 bg-flame-600 hover:bg-flame-700 text-white rounded-2xl px-4 py-3.5 shadow-2xl shadow-flame-600/40">
+    <span id="cartBarCount" class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center font-extrabold">0</span>
+    <span class="flex-1 text-right font-bold">عرض السلة</span>
+    <span id="cartBarTotal" class="font-extrabold"></span>
+  </button>
+</div>
+
+<!-- ============ OVERLAY ============ -->
+<div id="overlay" class="fixed inset-0 z-50 bg-coal-950/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+<!-- ============ ITEM SHEET ============ -->
+<div id="itemSheet" class="fixed inset-0 z-[70] flex items-end sm:items-center justify-center sm:p-4 pointer-events-none invisible">
+  <div id="itemPanel" class="sheet pointer-events-auto w-full sm:w-[520px] translate-y-full bg-white rounded-t-3xl sm:rounded-3xl max-h-[92vh] flex flex-col overflow-hidden shadow-2xl">
+    <div id="itemBody" class="overflow-y-auto"></div>
+    <div id="itemFoot" class="border-t border-coal-200 p-4 pb-safe bg-white"></div>
+  </div>
+</div>
+
+<!-- ============ CART / CHECKOUT SHEET ============ -->
+<div id="cartSheet" class="sheet fixed inset-x-0 bottom-0 z-[60] translate-y-full sm:inset-y-0 sm:left-0 sm:right-auto sm:w-[440px] sm:translate-y-0 sm:-translate-x-full">
+  <div class="bg-white rounded-t-3xl sm:rounded-none h-[92vh] sm:h-full flex flex-col shadow-2xl">
+    <div class="flex items-center justify-between px-5 h-16 border-b border-coal-200 shrink-0">
+      <button id="cartBack" class="w-9 h-9 rounded-full hover:bg-coal-100 flex items-center justify-center invisible" aria-label="رجوع"><i class="fa-solid fa-arrow-right"></i></button>
+      <h3 id="cartTitle" class="font-extrabold">سلتك</h3>
+      <button data-close class="w-9 h-9 rounded-full hover:bg-coal-100 flex items-center justify-center" aria-label="إغلاق"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div id="cartBody" class="flex-1 overflow-y-auto p-5"></div>
+    <div id="cartFoot" class="border-t border-coal-200 p-4 pb-safe shrink-0"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[80] bg-coal-900 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-2xl opacity-0 pointer-events-none transition-opacity duration-300 flex items-center gap-2 whitespace-nowrap"></div>
+
+<script>
+/* ================= CONFIG ================= */
+const CONFIG = {
+  name: 'مطعم لهيب',
+  whatsapp: '',            // رقم واتساب المطعم بالصيغة الدولية بدون + (مثال: 212612345678). فارغ = يختار المستخدم جهة الاتصال
+  currency: 'درهم',
+  open: '12:00', close: '23:30',
+  minOrder: 60, deliveryFee: 15, freeDelivery: 200,
+  prepMinutes: { delivery: '30–40', pickup: '15–20' },
+};
+const IMG = id => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&q=70&w=600`;
+const CATEGORIES = [
+  { id:'burgers',  name:'برغر',      icon:'fa-burger' },
+  { id:'pizza',    name:'بيتزا',     icon:'fa-pizza-slice' },
+  { id:'grill',    name:'مشاوي',     icon:'fa-fire' },
+  { id:'pasta',    name:'باستا',     icon:'fa-bowl-food' },
+  { id:'salads',   name:'سلطات',     icon:'fa-leaf' },
+  { id:'desserts', name:'حلويات',    icon:'fa-ice-cream' },
+  { id:'drinks',   name:'مشروبات',   icon:'fa-mug-hot' },
+];
+const SIZES = { sm:'صغير', md:'وسط', lg:'كبير' };
+/* Menu engineering: "star" items get Chef's pick + top position; descriptive copy; tags */
+const MENU = [
+  { id:'b1', cat:'burgers', name:'برغر لهيب المزدوج', desc:'شريحتا لحم بقري مشوي على الفحم، جبن شيدر ذائب، بصل مكرمل وصوص لهيب الخاص.', price:75, img:IMG('1568901346375-23c9450c58cd'), tags:['chef','popular'], cal:980,
+    options:{ title:'درجة الطهي', items:[['medium','متوسط',0],['well','مستوي جيداً',0]] }, extras:[['cheese','جبن إضافي',8],['bacon','لحم مقدد بقري',12],['egg','بيضة',6],['jalap','هالبينو',5]] },
+  { id:'b2', cat:'burgers', name:'برغر الدجاج المقرمش', desc:'صدر دجاج متبل ومقلي بقرمشة ذهبية، خس طازج وصوص الثوم.', price:55, img:IMG('1550547660-d9450f859349'), tags:['popular'], cal:720,
+    extras:[['cheese','جبن إضافي',8],['spicy','صوص حار',3]] },
+  { id:'b3', cat:'burgers', name:'برغر الفطر والجبن السويسري', desc:'لحم بقري، فطر سوتيه بالزبدة، جبن سويسري وصوص الترافل.', price:68, img:IMG('1553979459-d2229ba7433b'), tags:['new'], cal:860,
+    extras:[['cheese','جبن إضافي',8],['egg','بيضة',6]] },
+  { id:'p1', cat:'pizza', name:'بيتزا مارغريتا', desc:'صلصة طماطم إيطالية، موزاريلا طازجة وريحان. بساطة لا تُقاوَم.', price:50, img:IMG('1574071318508-1cdbab80d002'), tags:['veg'], cal:640,
+    sizes:{ sm:0, md:20, lg:40 }, extras:[['olives','زيتون',5],['mush','فطر',6],['xcheese','موزاريلا إضافية',10]] },
+  { id:'p2', cat:'pizza', name:'بيتزا الدجاج المشوي', desc:'دجاج متبل مشوي على الفحم، فلفل ملون، بصل أحمر وصوص باربكيو.', price:65, img:IMG('1565299624946-b28f40a0ae38'), tags:['chef','popular'], cal:820,
+    sizes:{ sm:0, md:20, lg:40 }, extras:[['olives','زيتون',5],['xcheese','موزاريلا إضافية',10],['spicy','صوص حار',3]] },
+  { id:'p3', cat:'pizza', name:'بيتزا الخضار', desc:'فلفل، فطر، زيتون، ذرة وطماطم كرزية على صلصة الطماطم.', price:55, img:IMG('1513104890138-7c749659a591'), tags:['veg'], cal:610,
+    sizes:{ sm:0, md:20, lg:40 }, extras:[['xcheese','موزاريلا إضافية',10]] },
+  { id:'g1', cat:'grill', name:'ستيك ريب آي', desc:'300 غرام من أجود اللحم، مشوي حسب رغبتك، مع بطاطس مهروسة وصوص الفلفل.', price:180, img:IMG('1600891964092-4316c288032e'), tags:['chef'], cal:1100,
+    options:{ title:'درجة الطهي', items:[['rare','نصف نيء',0],['medium','متوسط',0],['well','مستوي جيداً',0]] }, extras:[['sauce','صوص إضافي',8],['veggies','خضار مشوية',15]] },
+  { id:'g2', cat:'grill', name:'نصف دجاجة مشوية', desc:'دجاج متبل بالليمون والأعشاب، مشوي ببطء على الفحم، مع أرز وصلصة الثوم.', price:70, img:IMG('1598103442097-8b74394b95c6'), tags:['popular'], cal:890,
+    extras:[['garlic','ثوم إضافي',4],['fries','بطاطس مقلية',12]] },
+  { id:'pa1', cat:'pasta', name:'باستا ألفريدو بالدجاج', desc:'فيتوتشيني بصلصة الكريمة والبارميزان مع شرائح الدجاج المشوي.', price:62, img:IMG('1621996346565-e3dbc646d9a9'), tags:[], cal:870 },
+  { id:'pa2', cat:'pasta', name:'سباغيتي بولونيز', desc:'صلصة لحم مطهوة ببطء لساعات مع طماطم وأعشاب إيطالية.', price:58, img:IMG('1473093295043-cdd812d0e601'), tags:['popular'], cal:780 },
+  { id:'s1', cat:'salads', name:'سلطة سيزر', desc:'خس روماني مقرمش، خبز محمص، بارميزان وصلصة سيزر. أضف دجاجاً مشوياً.', price:42, img:IMG('1550304943-4f24f54ddde9'), tags:['veg'], cal:390,
+    extras:[['chicken','دجاج مشوي',18]] },
+  { id:'s2', cat:'salads', name:'بول الحبوب الصحي', desc:'كينوا، أفوكادو، حمص، خضار طازجة وصلصة الليمون والطحينة.', price:52, img:IMG('1512621776951-a57141f2eefd'), tags:['veg','new'], cal:520 },
+  { id:'d1', cat:'desserts', name:'كيك الشوكولاتة الذائبة', desc:'قلب شوكولاتة ساخن يذوب مع كرة آيس كريم فانيلا.', price:38, img:IMG('1565958011703-44f9829ba187'), tags:['chef'], cal:560 },
+  { id:'d2', cat:'desserts', name:'آيس كريم إيطالي', desc:'ثلاث كرات من اختيارك مع صوص الكراميل.', price:28, img:IMG('1563805042-7684c019e1cb'), tags:[], cal:420 },
+  { id:'dr1', cat:'drinks', name:'عصير برتقال طازج', desc:'معصور أمامك، بدون سكر مضاف.', price:18, img:IMG('1600271886742-f049cd451bba'), tags:['popular'], cal:110,
+    sizes:{ sm:0, lg:8 } },
+  { id:'dr2', cat:'drinks', name:'لاتيه', desc:'إسبريسو مع حليب مبخر ورغوة ناعمة.', price:20, img:IMG('1509042239860-f550ce710b93'), tags:[], cal:150 },
+  { id:'dr3', cat:'drinks', name:'مشروب غازي', desc:'كوكا كولا، فانتا أو سبرايت.', price:10, img:'', tags:[], cal:140,
+    options:{ title:'النوع', items:[['cola','كولا',0],['orange','برتقال',0],['lemon','ليمون',0]] } },
+];
+const TAG = {
+  chef:    { label:'اختيار الشيف', cls:'bg-amber-100 text-amber-800', icon:'fa-crown' },
+  popular: { label:'الأكثر طلباً', cls:'bg-flame-100 text-flame-700', icon:'fa-fire' },
+  new:     { label:'جديد', cls:'bg-sky-100 text-sky-700', icon:'fa-star' },
+  veg:     { label:'نباتي', cls:'bg-emerald-100 text-emerald-700', icon:'fa-leaf' },
+};
+
+/* ================= HELPERS ================= */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+const item = id => MENU.find(m => m.id === id);
+const num = n => n.toLocaleString('ar-MA');                 // menu: numbers only (Cornell, Yang et al. 2009)
+const money = n => `${num(n)} ${CONFIG.currency}`;          // cart & totals: full currency for clarity
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(msg, icon = 'fa-circle-check') {
+  const t = $('#toast'); t.innerHTML = `<i class="fa-solid ${icon} text-flame-400"></i><span>${msg}</span>`;
+  t.style.opacity = 1; clearTimeout(t._h); t._h = setTimeout(() => t.style.opacity = 0, 2200);
+}
+const toMin = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+function isOpen(d = new Date()) { const m = d.getHours() * 60 + d.getMinutes(); return m >= toMin(CONFIG.open) && m < toMin(CONFIG.close); }
+function imgTag(src, alt, cls, iconCat) {
+  const ic = (CATEGORIES.find(c => c.id === iconCat) || {}).icon || 'fa-utensils';
+  const fb = `<div class='img-fallback ${cls} flex items-center justify-center text-white/90'><i class='fa-solid ${ic} text-3xl'></i></div>`;
+  return src ? `<img src="${src}" alt="${esc(alt)}" loading="lazy" class="${cls} object-cover" onerror="this.outerHTML=&quot;${fb}&quot;">` : fb.replace(/'/g, '"');
+}
+
+/* ================= STATE ================= */
+let cart = store.get('lahib_cart', []);      // [{key, id, qty, size, option, extras:[], note, unit}]
+let mode = store.get('lahib_mode', 'delivery');
+let customer = store.get('lahib_customer', { name:'', phone:'', address:'', when:'asap', time:'', pay:'cash' });
+let query = '';
+const saveCart = () => { store.set('lahib_cart', cart); renderCartBar(); };
+
+/* ================= RENDER MENU ================= */
+function tagChips(tags, small) {
+  return tags.map(t => `<span class="inline-flex items-center gap-1 ${TAG[t].cls} ${small ? 'text-[10px] px-1.5 py-0.5' : 'text-[11px] px-2 py-0.5'} rounded-md font-bold"><i class="fa-solid ${TAG[t].icon}"></i>${TAG[t].label}</span>`).join('');
+}
+function qtyInCart(id) { return cart.filter(c => c.id === id).reduce((s, c) => s + c.qty, 0); }
+
+function renderPicks() {
+  $('#picksRow').innerHTML = MENU.filter(m => m.tags.includes('chef')).map(m => `
+    <button data-item="${m.id}" class="shrink-0 w-56 text-right bg-white rounded-2xl border border-coal-200 overflow-hidden hover:shadow-lg transition group">
+      <div class="relative h-32 overflow-hidden">${imgTag(m.img, m.name, 'w-full h-full group-hover:scale-105 transition duration-500', m.cat)}
+        <span class="absolute top-2 right-2 bg-amber-400 text-coal-900 text-[10px] font-extrabold px-2 py-1 rounded-md"><i class="fa-solid fa-crown ml-1"></i>اختيار الشيف</span></div>
+      <div class="p-3"><div class="font-bold text-sm truncate">${m.name}</div><div class="flex items-center justify-between mt-1"><span class="font-extrabold text-flame-700">${num(m.price)}</span><span class="w-7 h-7 rounded-lg bg-flame-500 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-plus"></i></span></div></div>
+    </button>`).join('');
+}
+
+let activeCat = 'all';
+function cardHtml(m) {
+  const n = qtyInCart(m.id);
+  return `<article data-item="${m.id}" class="fade-in cursor-pointer bg-white rounded-2xl border ${n ? 'border-flame-400 ring-1 ring-flame-400' : 'border-coal-200'} p-3 flex gap-3 hover:shadow-md transition">
+    <div class="flex-1 min-w-0 flex flex-col">
+      <div class="flex flex-wrap gap-1 mb-1.5">${tagChips(m.tags, true)}</div>
+      <h3 class="font-bold leading-snug">${m.name}</h3>
+      <p class="text-xs text-coal-500 leading-5 mt-1 line-clamp-2">${m.desc}</p>
+      <div class="mt-auto pt-2 flex items-center gap-2"><span class="font-extrabold">${num(m.price)}</span>${m.sizes ? '<span class="text-[11px] text-coal-500">يبدأ من</span>' : ''}<span class="text-[11px] text-coal-500 mr-auto">${m.cal} سعرة</span></div>
+    </div>
+    <div class="relative w-28 h-28 shrink-0 rounded-xl overflow-hidden">
+      ${imgTag(m.img, m.name, 'w-full h-full', m.cat)}
+      <span class="absolute bottom-1.5 left-1.5 ${n ? 'bg-flame-600 px-2' : 'bg-white text-coal-900 w-8'} h-8 rounded-lg shadow-md flex items-center justify-center text-sm font-extrabold ${n ? 'text-white' : ''}">${n ? '×' + n : '<i class="fa-solid fa-plus"></i>'}</span>
+    </div>
+  </article>`;
+}
+const sortStars = (a, b) => (b.tags.includes('chef') - a.tags.includes('chef')) || (b.tags.includes('popular') - a.tags.includes('popular')); // menu engineering
+function renderMenu() {
+  const q = query.trim();
+  const list = MENU.filter(m => (!q || (m.name + ' ' + m.desc).includes(q)) && (activeCat === 'all' || m.cat === activeCat));
+  $('#picks').classList.toggle('hidden', !!q || activeCat !== 'all');
+  $('#noResults').classList.toggle('hidden', list.length > 0);
+  const cats = activeCat === 'all' ? CATEGORIES : CATEGORIES.filter(c => c.id === activeCat);
+  $('#menuSections').innerHTML = cats.map(c => {
+    const items = list.filter(m => m.cat === c.id).sort(sortStars);
+    if (!items.length) return '';
+    const single = activeCat !== 'all';
+    return `<section id="cat-${c.id}" data-section="${c.id}" class="pt-8">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-xl font-extrabold flex items-center gap-2"><i class="fa-solid ${c.icon} text-flame-500 text-base"></i>${c.name}<span class="text-sm font-semibold text-coal-500">(${items.length})</span></h2>
+        ${single ? '<button data-cat="all" class="text-sm font-bold text-flame-700 hover:underline">عرض كل القائمة</button>'
+                 : `<button data-cat="${c.id}" class="text-xs font-bold text-coal-500 hover:text-flame-700">عرض القسم <i class="fa-solid fa-chevron-left text-[10px] mr-1"></i></button>`}
+      </div>
+      <div class="grid md:grid-cols-2 gap-3">${items.map(cardHtml).join('')}</div>
+    </section>`;
+  }).join('');
+  renderCatNav();
+}
+
+function renderCatNav() {
+  const q = query.trim();
+  const count = id => MENU.filter(m => (id === 'all' || m.cat === id) && (!q || (m.name + ' ' + m.desc).includes(q))).length;
+  const chips = [{ id:'all', name:'الكل', icon:'fa-utensils' }, ...CATEGORIES];
+  $('#catNav').innerHTML = chips.map(c => {
+    const on = c.id === activeCat, n = count(c.id);
+    return `<button data-cat="${c.id}" aria-pressed="${on}" class="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-bold transition ${on ? 'bg-coal-900 text-white shadow-md' : 'bg-coal-100 text-coal-700 hover:bg-coal-200'} ${n ? '' : 'opacity-40'}">
+      <i class="fa-solid ${c.icon} text-xs ${on ? 'text-flame-400' : 'text-coal-500'}"></i>${c.name}<span class="text-[11px] ${on ? 'text-coal-300' : 'text-coal-500'}">${n}</span></button>`;
+  }).join('');
+  const a = document.querySelector(`#catNav [data-cat="${activeCat}"]`); if (a) a.scrollIntoView({ inline:'center', block:'nearest' });
+}
+function selectCat(id) {
+  activeCat = id; renderMenu();
+  const top = $('main').getBoundingClientRect().top + window.scrollY - $('#stickyBar').offsetHeight + 8;
+  if (window.scrollY > top || id !== 'all') window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+}
+
+function renderHeader() {
+  const open = isOpen();
+  $('#openBadge').innerHTML = open
+    ? `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>مفتوح الآن • حتى ${CONFIG.close}`
+    : `<span class="w-2 h-2 rounded-full bg-red-400"></span>مغلق • يفتح ${CONFIG.open} — يمكنك جدولة طلبك`;
+  $$('[data-mode]').forEach(b => b.className = `px-3 py-1.5 rounded-lg ${b.dataset.mode === mode ? 'bg-white shadow-sm text-coal-900' : 'text-coal-500'}`);
+  $('#minLabel').textContent = money(CONFIG.minOrder); $('#freeLabel').textContent = money(CONFIG.freeDelivery);
+}
+
+/* ================= ITEM SHEET ================= */
+let draft = null;
+function openItem(id, editKey) {
+  const m = item(id);
+  const existing = editKey && cart.find(c => c.key === editKey);
+  draft = existing ? JSON.parse(JSON.stringify(existing)) : {
+    id, qty: 1, size: m.sizes ? Object.keys(m.sizes)[0] : null,
+    option: m.options ? m.options.items[0][0] : null, extras: [], note: '' };
+  draft.editKey = editKey || null;
+  renderItem(); show('#itemSheet');
+}
+function unitPrice(d) {
+  const m = item(d.id);
+  return m.price + (m.sizes && d.size ? m.sizes[d.size] : 0) + (m.extras || []).filter(e => d.extras.includes(e[0])).reduce((s, e) => s + e[2], 0);
+}
+function renderItem() {
+  const m = item(draft.id);
+  $('#itemBody').innerHTML = `
+    <div class="relative h-56 sm:h-64">${imgTag(m.img, m.name, 'w-full h-full', m.cat)}
+      <button data-close class="absolute top-3 left-3 w-10 h-10 rounded-full bg-white/90 shadow flex items-center justify-center" aria-label="إغلاق"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="p-5">
+      <div class="flex flex-wrap gap-1 mb-2">${tagChips(m.tags)}</div>
+      <h3 class="text-2xl font-extrabold mb-1">${m.name}</h3>
+      <p class="text-sm text-coal-500 leading-6 mb-1">${m.desc}</p>
+      <p class="text-xs text-coal-500 mb-5"><i class="fa-solid fa-fire-flame-simple ml-1"></i>${m.cal} سعرة حرارية</p>
+
+      ${m.sizes ? group('الحجم', 'مطلوب', Object.entries(m.sizes).map(([k, p]) => radio('size', k, SIZES[k], p, draft.size === k)).join('')) : ''}
+      ${m.options ? group(m.options.title, 'مطلوب', m.options.items.map(([k, l, p]) => radio('option', k, l, p, draft.option === k)).join('')) : ''}
+      ${m.extras ? group('إضافات', 'اختياري', m.extras.map(([k, l, p]) => `
+        <label class="flex items-center gap-3 py-3 cursor-pointer">
+          <input type="checkbox" data-extra="${k}" ${draft.extras.includes(k) ? 'checked' : ''} class="w-5 h-5 accent-orange-600 rounded">
+          <span class="flex-1">${l}</span><span class="text-sm font-semibold text-coal-700 whitespace-nowrap">+${num(p)} ${CONFIG.currency}</span>
+        </label>`).join('')) : ''}
+
+      <label class="block text-sm font-bold mb-2 mt-2" for="itemNote">ملاحظة للمطبخ <span class="font-normal text-coal-500">(اختياري)</span></label>
+      <textarea id="itemNote" rows="2" maxlength="120" class="w-full bg-coal-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-flame-500 resize-none" placeholder="مثلاً: بدون بصل">${esc(draft.note)}</textarea>
+    </div>`;
+  $$('[data-radio]').forEach(r => r.onchange = () => { draft[r.dataset.radio] = r.value; renderItemFoot(); });
+  $$('[data-extra]').forEach(c => c.onchange = () => { draft.extras = c.checked ? [...draft.extras, c.dataset.extra] : draft.extras.filter(x => x !== c.dataset.extra); renderItemFoot(); });
+  $('#itemNote').oninput = e => draft.note = e.target.value;
+  renderItemFoot();
+}
+function group(title, badge, inner) {
+  return `<fieldset class="mb-4 border border-coal-200 rounded-2xl px-4 pt-3 pb-1">
+    <legend class="sr-only">${title}</legend>
+    <div class="flex items-center justify-between mb-1"><span class="font-bold">${title}</span><span class="text-[11px] font-bold ${badge === 'مطلوب' ? 'bg-coal-900 text-white' : 'bg-coal-100 text-coal-500'} px-2 py-0.5 rounded-md">${badge}</span></div>
+    <div class="divide-y divide-coal-100">${inner}</div></fieldset>`;
+}
+function radio(name, value, label, price, checked) {
+  return `<label class="flex items-center gap-3 py-3 cursor-pointer">
+    <input type="radio" name="${name}" value="${value}" data-radio="${name}" ${checked ? 'checked' : ''} class="w-5 h-5 accent-orange-600">
+    <span class="flex-1">${label}</span>${price ? `<span class="text-sm font-semibold text-coal-700 whitespace-nowrap">+${num(price)} ${CONFIG.currency}</span>` : '<span class="text-xs text-coal-500">بدون إضافة</span>'}</label>`;
+}
+function renderItemFoot() {
+  const total = unitPrice(draft) * draft.qty;
+  $('#itemFoot').innerHTML = `<div class="flex items-center gap-3">
+    <div class="flex items-center bg-coal-100 rounded-xl">
+      <button id="qMinus" class="w-11 h-12 text-lg" aria-label="إنقاص">−</button>
+      <span class="w-6 text-center font-extrabold">${draft.qty}</span>
+      <button id="qPlus" class="w-11 h-12 text-lg" aria-label="زيادة">+</button>
+    </div>
+    <button id="addItem" class="flex-1 h-12 rounded-xl bg-flame-600 hover:bg-flame-700 text-white font-extrabold flex items-center justify-between px-5 shadow-lg shadow-flame-600/30">
+      <span>${draft.editKey ? 'تحديث' : 'أضف للسلة'}</span><span>${money(total)}</span></button></div>`;
+  $('#qMinus').onclick = () => { if (draft.qty > 1) { draft.qty--; renderItemFoot(); } };
+  $('#qPlus').onclick = () => { draft.qty++; renderItemFoot(); };
+  $('#addItem').onclick = commitItem;
+}
+function commitItem() {
+  const sig = [draft.id, draft.size, draft.option, [...draft.extras].sort().join('+'), draft.note.trim()].join('|');
+  const line = { key: sig, id: draft.id, qty: draft.qty, size: draft.size, option: draft.option, extras: [...draft.extras], note: draft.note.trim(), unit: unitPrice(draft) };
+  if (draft.editKey) cart = cart.filter(c => c.key !== draft.editKey);
+  const same = cart.find(c => c.key === sig);
+  if (same) same.qty += line.qty; else cart.push(line);
+  const wasEdit = !!draft.editKey;
+  saveCart(); renderMenu(); hide('#itemSheet');
+  if (wasEdit && isShown('#cartSheet')) renderCart(); else { toast(`أُضيف ${item(line.id).name}`); bumpCart(); }
+}
+function lineDetails(c) {
+  const m = item(c.id), parts = [];
+  if (c.size) parts.push(SIZES[c.size]);
+  if (c.option) parts.push(m.options.items.find(o => o[0] === c.option)[1]);
+  c.extras.forEach(x => parts.push('+ ' + m.extras.find(e => e[0] === x)[1]));
+  return parts;
+}
+
+/* ================= CART ================= */
+function totals() {
+  const sub = cart.reduce((s, c) => s + c.unit * c.qty, 0);
+  const fee = mode === 'delivery' && sub > 0 && sub < CONFIG.freeDelivery ? CONFIG.deliveryFee : 0;
+  return { sub, fee, total: sub + fee, count: cart.reduce((s, c) => s + c.qty, 0) };
+}
+function renderCartBar() {
+  const t = totals();
+  $('#cartBar').classList.toggle('translate-y-full', t.count === 0);
+  $('#cartBarCount').textContent = num(t.count);
+  $('#cartBarTotal').textContent = money(t.total);
+}
+function bumpCart() { const b = $('#cartBarBtn'); b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); }
+
+let cartStep = 'cart';
+function openCart() { cartStep = 'cart'; renderCart(); show('#cartSheet'); }
+function renderCart() {
+  const t = totals();
+  $('#cartBack').classList.toggle('invisible', cartStep !== 'checkout');
+  if (cartStep === 'checkout') return renderCheckout();
+  $('#cartTitle').textContent = 'سلتك';
+  if (!cart.length) {
+    $('#cartBody').innerHTML = `<div class="text-center py-20 text-coal-500 fade-in"><i class="fa-solid fa-basket-shopping text-5xl text-coal-300 mb-4 block"></i><p class="mb-5">سلتك فارغة</p><button data-close class="px-5 py-2.5 rounded-xl bg-coal-900 text-white font-bold text-sm">تصفح القائمة</button></div>`;
+    $('#cartFoot').innerHTML = ''; return;
+  }
+  const below = mode === 'delivery' && t.sub < CONFIG.minOrder;
+  const left = CONFIG.freeDelivery - t.sub;
+  const upsell = MENU.filter(m => ['drinks', 'desserts'].includes(m.cat) && !cart.some(c => c.id === m.id)).slice(0, 4);
+
+  $('#cartBody').innerHTML = `
+    <div class="fade-in space-y-4">
+      ${mode === 'delivery' ? `<div class="rounded-2xl ${left > 0 ? 'bg-flame-50 border border-flame-200' : 'bg-emerald-50 border border-emerald-200'} p-3">
+        <div class="text-sm font-semibold mb-2 ${left > 0 ? 'text-flame-700' : 'text-emerald-700'}"><i class="fa-solid fa-motorcycle ml-1.5"></i>${left > 0 ? `أضف <b>${money(left)}</b> للحصول على توصيل مجاني` : 'مبروك! التوصيل مجاني لطلبك'}</div>
+        <div class="h-2 bg-white rounded-full overflow-hidden"><div class="h-full rounded-full ${left > 0 ? 'bg-flame-500' : 'bg-emerald-500'} transition-all duration-500" style="width:${Math.min(100, t.sub / CONFIG.freeDelivery * 100)}%"></div></div>
+      </div>` : `<div class="rounded-2xl bg-coal-100 p-3 text-sm font-semibold"><i class="fa-solid fa-bag-shopping ml-1.5"></i>استلام من المطعم — جاهز خلال ${CONFIG.prepMinutes.pickup} دقيقة</div>`}
+
+      <div class="divide-y divide-coal-100">${cart.map(c => { const m = item(c.id); const det = lineDetails(c); return `
+        <div class="py-3 flex gap-3">
+          <div class="w-16 h-16 rounded-xl overflow-hidden shrink-0">${imgTag(m.img, m.name, 'w-full h-full', m.cat)}</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between gap-2"><span class="font-bold text-sm">${m.name}</span><span class="font-bold text-sm whitespace-nowrap">${money(c.unit * c.qty)}</span></div>
+            ${det.length ? `<div class="text-xs text-coal-500 mt-0.5">${det.join(' • ')}</div>` : ''}
+            ${c.note ? `<div class="text-xs text-coal-500 mt-0.5"><i class="fa-regular fa-note-sticky ml-1"></i>${esc(c.note)}</div>` : ''}
+            <div class="flex items-center gap-2 mt-2">
+              <div class="flex items-center bg-coal-100 rounded-lg">
+                <button data-dec="${esc(c.key)}" class="w-8 h-8" aria-label="إنقاص">${c.qty === 1 ? '<i class="fa-regular fa-trash-can text-xs"></i>' : '−'}</button>
+                <span class="w-5 text-center text-sm font-bold">${c.qty}</span>
+                <button data-inc="${esc(c.key)}" class="w-8 h-8" aria-label="زيادة">+</button>
+              </div>
+              ${(m.sizes || m.options || m.extras) ? `<button data-edit="${esc(c.key)}" class="text-xs font-bold text-flame-700 hover:underline">تعديل</button>` : ''}
+            </div>
+          </div>
+        </div>`; }).join('')}</div>
+
+      ${upsell.length ? `<div><div class="font-bold text-sm mb-2">يكمل وجبتك</div>
+        <div class="flex gap-2 overflow-x-auto no-scrollbar -mx-5 px-5">${upsell.map(m => `
+          <button data-quick="${m.id}" class="shrink-0 w-32 text-right bg-white border border-coal-200 rounded-xl overflow-hidden hover:border-flame-400">
+            <div class="h-20">${imgTag(m.img, m.name, 'w-full h-full', m.cat)}</div>
+            <div class="p-2"><div class="text-xs font-bold truncate">${m.name}</div><div class="flex items-center justify-between mt-1"><span class="text-xs font-extrabold">${money(m.price)}</span><i class="fa-solid fa-circle-plus text-flame-600"></i></div></div>
+          </button>`).join('')}</div></div>` : ''}
+    </div>`;
+
+  $('#cartFoot').innerHTML = `
+    <div class="space-y-1.5 text-sm mb-3">
+      <div class="flex justify-between"><span class="text-coal-500">المجموع الفرعي</span><span>${money(t.sub)}</span></div>
+      ${mode === 'delivery' ? `<div class="flex justify-between"><span class="text-coal-500">التوصيل</span><span class="${t.fee ? '' : 'text-emerald-600 font-bold'}">${t.fee ? money(t.fee) : 'مجاني'}</span></div>` : ''}
+      <div class="flex justify-between font-extrabold text-base pt-1.5 border-t border-coal-200"><span>الإجمالي</span><span>${money(t.total)}</span></div>
+    </div>
+    ${below ? `<p class="text-xs text-red-600 mb-2"><i class="fa-solid fa-circle-exclamation ml-1"></i>الحد الأدنى للتوصيل ${money(CONFIG.minOrder)} — أضف ${money(CONFIG.minOrder - t.sub)}</p>` : ''}
+    <button id="toCheckout" ${below ? 'disabled' : ''} class="w-full h-12 rounded-xl font-extrabold ${below ? 'bg-coal-200 text-coal-500 cursor-not-allowed' : 'bg-flame-600 hover:bg-flame-700 text-white shadow-lg shadow-flame-600/30'}">متابعة الطلب</button>`;
+  if (!below) $('#toCheckout').onclick = () => { cartStep = 'checkout'; renderCart(); };
+}
+
+/* ================= CHECKOUT ================= */
+function timeOptions() {
+  const out = [], now = new Date(), start = Math.max(toMin(CONFIG.open), Math.ceil((now.getHours() * 60 + now.getMinutes() + 45) / 15) * 15);
+  const today = start < toMin(CONFIG.close);
+  const from = today ? start : toMin(CONFIG.open);
+  for (let m = from; m < toMin(CONFIG.close) && out.length < 30; m += 15) out.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
+  return { day: today ? 'اليوم' : 'غداً', list: out };
+}
+function renderCheckout() {
+  $('#cartTitle').textContent = 'إتمام الطلب';
+  const open = isOpen(), t = totals(), times = timeOptions();
+  if (!open) customer.when = 'later';
+  $('#cartBody').innerHTML = `
+    <form id="checkoutForm" class="space-y-5 fade-in" novalidate>
+      <div class="flex bg-coal-100 rounded-xl p-1 text-sm font-bold">
+        ${[['delivery','fa-motorcycle','توصيل'],['pickup','fa-bag-shopping','استلام من المطعم']].map(([k, ic, l]) => `<button type="button" data-mode="${k}" class="flex-1 py-2 rounded-lg ${mode === k ? 'bg-white shadow-sm' : 'text-coal-500'}"><i class="fa-solid ${ic} ml-1.5"></i>${l}</button>`).join('')}
+      </div>
+      ${field('cName', 'الاسم', 'text', customer.name, 'name', 'اسمك')}
+      <div>
+        <label for="cPhone" class="block text-sm font-bold mb-1.5">رقم الهاتف</label>
+        <input id="cPhone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" value="${esc(customer.phone)}" placeholder="06 12 34 56 78" class="w-full text-right bg-coal-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-flame-500">
+        <p class="text-xs text-coal-500 mt-1.5">ليتصل بك عامل التوصيل عند الوصول فقط.</p>
+        <p data-err="cPhone" class="hidden text-xs text-red-600 mt-1"><i class="fa-solid fa-circle-exclamation ml-1"></i>رقم غير صحيح، مثال: 0612345678</p>
+      </div>
+      ${mode === 'delivery' ? `<div>
+        <label for="cAddress" class="block text-sm font-bold mb-1.5">عنوان التوصيل</label>
+        <textarea id="cAddress" rows="2" autocomplete="street-address" class="w-full bg-coal-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-flame-500 resize-none" placeholder="الحي، الشارع، رقم المنزل، علامة مميزة">${esc(customer.address)}</textarea>
+        <p data-err="cAddress" class="hidden text-xs text-red-600 mt-1"><i class="fa-solid fa-circle-exclamation ml-1"></i>اكتب العنوان بتفصيل يكفي لعامل التوصيل</p>
+        <button type="button" id="locBtn" class="mt-2 text-xs font-bold text-flame-700"><i class="fa-solid fa-location-crosshairs ml-1"></i>إرفاق موقعي الحالي</button>
+        <span id="locState" class="text-xs text-emerald-600 mr-2"></span>
+      </div>` : ''}
+      <div>
+        <div class="text-sm font-bold mb-2">وقت ${mode === 'delivery' ? 'التوصيل' : 'الاستلام'}</div>
+        <div class="grid grid-cols-2 gap-2 mb-2">
+          <button type="button" data-when="asap" ${open ? '' : 'disabled'} class="py-3 rounded-xl border-2 text-sm font-bold ${customer.when === 'asap' && open ? 'border-flame-500 bg-flame-50' : 'border-coal-200'} ${open ? '' : 'opacity-40 cursor-not-allowed'}">في أقرب وقت<div class="text-[11px] font-normal text-coal-500">${CONFIG.prepMinutes[mode]} دقيقة</div></button>
+          <button type="button" data-when="later" class="py-3 rounded-xl border-2 text-sm font-bold ${customer.when === 'later' ? 'border-flame-500 bg-flame-50' : 'border-coal-200'}">جدولة لوقت لاحق<div class="text-[11px] font-normal text-coal-500">${times.day}</div></button>
+        </div>
+        ${customer.when === 'later' ? `<select id="cTime" class="w-full bg-coal-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-flame-500">${times.list.map(x => `<option ${customer.time === x ? 'selected' : ''}>${x}</option>`).join('')}</select>` : ''}
+      </div>
+      <div>
+        <div class="text-sm font-bold mb-2">طريقة الدفع</div>
+        ${[['cash','fa-money-bill-wave','نقداً عند الاستلام'],['card','fa-credit-card','بطاقة عند الاستلام']].map(([k, ic, l]) => `
+          <label class="flex items-center gap-3 p-3 mb-2 rounded-xl border-2 cursor-pointer ${customer.pay === k ? 'border-flame-500 bg-flame-50' : 'border-coal-200'}">
+            <input type="radio" name="pay" value="${k}" ${customer.pay === k ? 'checked' : ''} class="w-5 h-5 accent-orange-600"><i class="fa-solid ${ic} text-coal-500"></i><span class="font-semibold text-sm">${l}</span></label>`).join('')}
+      </div>
+    </form>`;
+
+  $('#cartFoot').innerHTML = `
+    <div class="flex justify-between font-extrabold mb-3"><span>الإجمالي</span><span>${money(t.total)}</span></div>
+    <button id="sendOrder" class="w-full h-12 rounded-xl bg-[#25D366] hover:bg-[#1ebe5a] text-white font-extrabold shadow-lg shadow-emerald-600/25"><i class="fa-brands fa-whatsapp text-lg ml-2"></i>أرسل الطلب عبر واتساب</button>
+    <p class="text-[11px] text-coal-500 text-center mt-2">سيفتح واتساب برسالة طلبك جاهزة، اضغط إرسال فقط.</p>`;
+
+  const sync = () => {
+    customer.name = $('#cName').value; customer.phone = $('#cPhone').value;
+    if ($('#cAddress')) customer.address = $('#cAddress').value;
+    if ($('#cTime')) customer.time = $('#cTime').value;
+    store.set('lahib_customer', customer);
+  };
+  $('#checkoutForm').addEventListener('input', sync);
+  $('#checkoutForm').addEventListener('change', e => { if (e.target.name === 'pay') { customer.pay = e.target.value; sync(); renderCheckout(); } else sync(); });
+  ['#cName', '#cPhone', '#cAddress'].forEach(id => { const el = $(id); if (el) el.addEventListener('blur', () => validate(id)); });
+  $$('[data-when]').forEach(b => b.onclick = () => { sync(); customer.when = b.dataset.when; if (customer.when === 'later' && !customer.time) customer.time = times.list[0] || ''; renderCheckout(); });
+  const lb = $('#locBtn'); if (lb) lb.onclick = attachLocation;
+  $('#sendOrder').onclick = () => { sync(); sendOrder(); };
+}
+function field(id, label, type, value, ac, ph) {
+  return `<div><label for="${id}" class="block text-sm font-bold mb-1.5">${label}</label>
+    <input id="${id}" type="${type}" autocomplete="${ac}" value="${esc(value)}" placeholder="${ph}" class="w-full bg-coal-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-flame-500">
+    <p data-err="${id}" class="hidden text-xs text-red-600 mt-1"><i class="fa-solid fa-circle-exclamation ml-1"></i>يرجى كتابة اسمك</p></div>`;
+}
+const RULES = {
+  '#cName': () => customer.name.trim().length >= 2,
+  '#cPhone': () => /^0?[5-7]\d{8}$/.test(customer.phone.replace(/[\s-]/g, '')),
+  '#cAddress': () => mode !== 'delivery' || customer.address.trim().length >= 8,
+};
+function validate(only) {
+  let firstBad = null;
+  Object.entries(RULES).forEach(([id, ok]) => {
+    if (only && only !== id) return;
+    const err = document.querySelector(`[data-err="${id.slice(1)}"]`); if (!err) return;
+    const good = ok(); err.classList.toggle('hidden', good);
+    if (!good && !firstBad) firstBad = id;
+  });
+  if (!only && firstBad) $(firstBad).focus();
+  return !firstBad;
+}
+let coords = null;
+function attachLocation() {
+  if (!navigator.geolocation) return toast('المتصفح لا يدعم تحديد الموقع', 'fa-circle-exclamation');
+  $('#locState').textContent = 'جارٍ التحديد...';
+  navigator.geolocation.getCurrentPosition(p => { coords = `${p.coords.latitude.toFixed(5)},${p.coords.longitude.toFixed(5)}`; $('#locState').innerHTML = '<i class="fa-solid fa-check ml-1"></i>تم إرفاق الموقع'; },
+    () => { $('#locState').textContent = ''; toast('تعذر تحديد الموقع، اكتب العنوان يدوياً', 'fa-circle-exclamation'); }, { timeout: 8000 });
+}
+
+function buildMessage(orderNo) {
+  const t = totals(), L = [];
+  L.push(`🔥 *طلب جديد — ${CONFIG.name}*`, `رقم الطلب: *${orderNo}*`, '');
+  cart.forEach(c => {
+    const m = item(c.id), det = lineDetails(c);
+    L.push(`▪️ ${c.qty}× ${m.name} — ${num(c.unit * c.qty)} ${CONFIG.currency}`);
+    if (det.length) L.push(`   ${det.join('، ')}`);
+    if (c.note) L.push(`   📝 ${c.note}`);
+  });
+  L.push('', `المجموع: ${money(t.sub)}`);
+  if (mode === 'delivery') L.push(`التوصيل: ${t.fee ? money(t.fee) : 'مجاني'}`);
+  L.push(`*الإجمالي: ${money(t.total)}*`, '');
+  L.push(mode === 'delivery' ? '🛵 *توصيل*' : '🛍️ *استلام من المطعم*');
+  L.push(`👤 ${customer.name.trim()}`, `📞 ${customer.phone.trim()}`);
+  if (mode === 'delivery') { L.push(`📍 ${customer.address.trim()}`); if (coords) L.push(`🗺️ https://maps.google.com/?q=${coords}`); }
+  L.push(`⏰ ${customer.when === 'asap' ? 'في أقرب وقت' : `${timeOptions().day} الساعة ${customer.time}`}`);
+  L.push(`💳 ${customer.pay === 'cash' ? 'نقداً عند الاستلام' : 'بطاقة عند الاستلام'}`);
+  return L.join('\n');
+}
+function sendOrder() {
+  if (!validate()) return toast('يرجى إكمال المعلومات المطلوبة', 'fa-circle-exclamation');
+  const orderNo = 'L' + Date.now().toString().slice(-5);
+  const url = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(buildMessage(orderNo))}`;
+  const t = totals(), summary = { orderNo, total: t.total, count: t.count, mode, when: customer.when, time: customer.time };
+  window.open(url, '_blank', 'noopener');
+  cart = []; saveCart(); renderMenu();
+  showSuccess(summary, url);
+}
+function showSuccess(s, url) {
+  $('#cartTitle').textContent = 'تم تجهيز طلبك';
+  $('#cartBack').classList.add('invisible');
+  $('#cartBody').innerHTML = `
+    <div class="text-center py-10 fade-in">
+      <div class="w-20 h-20 mx-auto mb-5 rounded-full bg-emerald-50 flex items-center justify-center"><i class="fa-brands fa-whatsapp text-[#25D366] text-4xl"></i></div>
+      <h3 class="text-2xl font-extrabold mb-2">شكراً ${esc(customer.name.trim())}!</h3>
+      <p class="text-coal-500 text-sm mb-6 leading-6">فُتح واتساب برسالة طلبك. <b class="text-coal-900">اضغط إرسال</b> ليصل الطلب للمطعم.</p>
+      <div class="inline-flex flex-col items-center bg-coal-100 rounded-2xl px-8 py-4 mb-6"><span class="text-xs text-coal-500">رقم الطلب</span><span class="font-mono text-2xl font-extrabold tracking-widest">${s.orderNo}</span></div>
+      <div class="text-sm text-coal-500 mb-6">${s.count} عناصر • ${money(s.total)} • ${s.mode === 'delivery' ? 'توصيل' : 'استلام'} ${s.when === 'asap' ? `خلال ${CONFIG.prepMinutes[s.mode]} دقيقة` : `الساعة ${s.time}`}</div>
+      <a href="${url}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-sm font-bold text-emerald-700"><i class="fa-solid fa-rotate-right"></i>لم يفتح واتساب؟ اضغط هنا</a>
+    </div>`;
+  $('#cartFoot').innerHTML = `<button data-close class="w-full h-12 rounded-xl bg-coal-900 text-white font-extrabold">العودة للقائمة</button>`;
+}
+
+/* ================= SHEETS ================= */
+function isShown(id) { return $(id).dataset.open === '1'; }
+function show(id) {
+  const el = $(id); el.dataset.open = '1';
+  if (id === '#itemSheet') { el.classList.remove('invisible'); requestAnimationFrame(() => $('#itemPanel').classList.remove('translate-y-full')); }
+  else { el.classList.remove('translate-y-full', 'sm:-translate-x-full'); el.classList.add('sm:translate-x-0'); }
+  const o = $('#overlay'); o.style.opacity = 1; o.style.pointerEvents = 'auto'; document.body.style.overflow = 'hidden';
+}
+function hide(id) {
+  const el = $(id); el.dataset.open = '0';
+  if (id === '#itemSheet') { $('#itemPanel').classList.add('translate-y-full'); el.classList.add('invisible'); }
+  else { el.classList.add('translate-y-full', 'sm:-translate-x-full'); el.classList.remove('sm:translate-x-0'); }
+  if (!isShown('#itemSheet') && !isShown('#cartSheet')) { const o = $('#overlay'); o.style.opacity = 0; o.style.pointerEvents = 'none'; document.body.style.overflow = ''; }
+}
+function closeTop() { if (isShown('#itemSheet')) hide('#itemSheet'); else if (isShown('#cartSheet')) hide('#cartSheet'); }
+
+/* ================= EVENTS ================= */
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-item],[data-close],[data-mode],[data-inc],[data-dec],[data-edit],[data-quick],[data-cat]');
+  if (!t) return;
+  const d = t.dataset;
+  if (d.cat) selectCat(d.cat);
+  else if (d.item) openItem(d.item);
+  else if ('close' in d) { e.preventDefault(); const inItem = t.closest('#itemSheet'); hide(inItem ? '#itemSheet' : '#cartSheet'); if (!inItem) cartStep = 'cart'; }
+  else if (d.mode) { mode = d.mode; store.set('lahib_mode', mode); renderHeader(); renderCartBar(); if (isShown('#cartSheet')) renderCart(); }
+  else if (d.inc) { const c = cart.find(x => x.key === d.inc); c.qty++; saveCart(); renderCart(); renderMenu(); }
+  else if (d.dec) { const c = cart.find(x => x.key === d.dec); c.qty--; if (c.qty <= 0) cart = cart.filter(x => x !== c); saveCart(); renderCart(); renderMenu(); }
+  else if (d.edit) { const c = cart.find(x => x.key === d.edit); openItem(c.id, c.key); }
+  else if (d.quick) {
+    const m = item(d.quick);
+    if (m.sizes || m.options) return openItem(m.id);
+    const key = [m.id, null, null, '', ''].join('|'), ex = cart.find(c => c.key === key);
+    if (ex) ex.qty++; else cart.push({ key, id: m.id, qty: 1, size: null, option: null, extras: [], note: '', unit: m.price });
+    saveCart(); renderCart(); renderMenu(); toast(`أُضيف ${m.name}`);
+  }
+});
+$('#overlay').onclick = closeTop;
+$('#itemSheet').addEventListener('click', e => { if (e.target.id === 'itemSheet') hide('#itemSheet'); });
+$('#cartBarBtn').onclick = openCart;
+$('#cartBack').onclick = () => { cartStep = 'cart'; renderCart(); };
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTop(); });
+let st; $('#search').addEventListener('input', e => { clearTimeout(st); st = setTimeout(() => { query = e.target.value; renderMenu(); }, 120); });
+
+/* ================= INIT ================= */
+cart = cart.filter(c => item(c.id));
+renderHeader(); renderPicks(); renderMenu(); renderCartBar();
+setInterval(renderHeader, 60000);
+</script>
+</body>
+</html>
